@@ -15,7 +15,7 @@ function getAllTopics(req, res){
 
 
 
-function getApi(req, res){
+function getApi(req, res, next){
     fs.readFile('endpoints.json')
     .then((data)=>{
         const parsedData = JSON.parse(data)
@@ -25,8 +25,10 @@ function getApi(req, res){
         return res.status(200).send(endpoints)
     })
     .catch((err) =>{
-        res.status(500).send({msg:"Error whilst reading json file"})
+        next(err)
     })
 }
+
+
 
 module.exports = {getAllTopics, getApi}
