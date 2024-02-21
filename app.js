@@ -3,6 +3,7 @@ const express = require('express')
 const app = express();
 const { getAllTopics, getApi} = require("./controllers/topics.controller");
 const { getArticlesById, getAllArticles } = require('./controllers/articles.controller');
+const { getCommentsByArticleID } = require('./controllers/comments.controller');
 
 app.use(express.json());
 
@@ -14,6 +15,8 @@ app.get("/api", getApi )
 
 app.get("/api/articles/:article_id", getArticlesById)
 app.get("/api/articles", getAllArticles)
+
+app.get("/api/articles/:article_id/comments", getCommentsByArticleID)
 
  // handle custom errors
 app.use((err, req, res, next) => {
