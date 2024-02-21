@@ -2,7 +2,7 @@ const request = require('supertest');
 const express = require('express')
 const app = express();
 const { getAllTopics, getApi} = require("./controllers/topics.controller");
-const { getArticlesById } = require('./controllers/articles.controller');
+const { getArticlesById, getAllArticles } = require('./controllers/articles.controller');
 
 app.use(express.json());
 
@@ -13,6 +13,7 @@ app.get("/api/topics", getAllTopics)
 app.get("/api", getApi )
 
 app.get("/api/articles/:article_id", getArticlesById)
+app.get("/api/articles", getAllArticles)
 
  // handle custom errors
 app.use((err, req, res, next) => {

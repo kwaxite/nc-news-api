@@ -3,7 +3,7 @@ const app = require("../app")
 const seed = require("../db/seeds/seed")
 const testData = require("../db/data/test-data/index")
 const db = require("../db/connection");
-const { selectAllTopics } = require("../models/topics.model");
+// const { selectAllTopics } = require("../models/topics.model");
 const endPointsJson=require("../endpoints.json") 
 
 beforeEach(() => {return seed(testData);});
@@ -21,10 +21,8 @@ describe("Topics", ()=>{
             .then((response) => {
                 const topics = response.body.topics;
                 expect(topics.length).toBe(3);
-                // expect(Array.isArray(topics)).toBe(true);
+                expect(Array.isArray(topics)).toBe(true);
                 topics.forEach((topic) => {
-                    expect(topic).toHaveProperty('description');
-                    expect(topic).toHaveProperty('slug');
                     expect(typeof topic.slug).toBe('string');
                     expect(typeof topic.description).toBe('string');
                     });
@@ -76,6 +74,29 @@ describe('Articles', ()=>{
                 expect(response.body.msg).toBe('Bad request');
                 });
             });
+    })
+    describe.only('GET /api/articles', ()=>{
+        test("returns an array of article objects with correct properties", ()=>{
+            return request(app)
+            .get("/api/articles")
+            .expect(200)
+            .then((response) => {
+                const articles = response.body.articles;
+                expect(articles.length).toBe(13);
+                expect(Array.isArray(articles)).toBe(true);
+                articles.forEach((article) => {
+                    expect(typeof article.author).toBe('string');
+                    expect(typeof article.title).toBe('string');
+                    expect(typeof article.article_id).toBe('number');
+                    expect(typeof article.topic).toBe('string');
+                    expect(typeof article.created_at).toBe('string');
+                    expect(typeof article.votes).toBe('number');
+                    expect(typeof article.article_img_url).toBe('string');
+                    expect(typeof article.comment_count).toBe('number');
+                    });
+            })
+        })
+
     })
 
 })
