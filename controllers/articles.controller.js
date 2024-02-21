@@ -15,7 +15,6 @@ function getArticlesById(req, res, next){
 function getAllArticles(req, res, next){
     return selectAllArticles()
     .then((articles) =>{
-        console.log('controller', articles)
         res.status(200).send({articles})
     })
     .catch((err) =>{

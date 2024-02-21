@@ -31,7 +31,6 @@ function selectAllArticles(){
         ORDER BY created_at DESC
     ;`)
     .then(response => {
-        console.log(response.rows)
         return response.rows
     })
 }

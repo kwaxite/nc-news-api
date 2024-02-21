@@ -3,8 +3,8 @@ const app = require("../app")
 const seed = require("../db/seeds/seed")
 const testData = require("../db/data/test-data/index")
 const db = require("../db/connection");
-// const { selectAllTopics } = require("../models/topics.model");
 const endPointsJson=require("../endpoints.json") 
+require('jest-sorted')
 
 beforeEach(() => {return seed(testData);});
 afterAll(() => {db.end();});
@@ -75,15 +75,13 @@ describe('Articles', ()=>{
                 });
             });
     })
-    describe.only('GET /api/articles', ()=>{
+    describe('GET /api/articles', ()=>{
         test("returns an array of article objects with correct properties", ()=>{
             return request(app)
             .get("/api/articles")
             .expect(200)
             .then((response) => {
                 const articles = response.body.articles;
-                expect(articles.length).toBe(13);
-                expect(Array.isArray(articles)).toBe(true);
                 articles.forEach((article) => {
                     expect(typeof article.author).toBe('string');
                     expect(typeof article.title).toBe('string');
@@ -96,9 +94,46 @@ describe('Articles', ()=>{
                     });
             })
         })
-
+        test("the articles should be sorted by date in descending order", ()=>{
+            return request(app)
+            .get("/api/articles")
+            .expect(200)
+            .then((response) => {
+                const articles = response.body.articles;
+                expect(Array.isArray(articles)).toBe(true);
+                expect(articles).toBeSorted({ created_at: 'id' })
+            })
+        })
     })
+})
 
+describe ("/api/articles/:article_id/comments", ()=>{
+    test('GET:200 sends an array of comments for the given article_id for each comment', () => {
+        return request(app)
+            .get('/api/articles/1/comments')
+            .expect(200)
+            .then((response) => {
+            expect(response.body.comments.length).toBe(11);
+            response.body.comments.forEach((comment) => {
+                expect(typeof comment.comment_id).toBe('number');
+                expect(typeof comment.votes).toBe('number');
+                expect(typeof comment.created_at).toBe('string');
+                expect(typeof comment.author).toBe('string');
+                expect(typeof comment.body).toBe('string');
+                expect(typeof comment.article_id).toBe('number');
+                expect(comment.article_id).toBe(1);
+            });
+            });
+        });
+    test("comments should be returned with the most recent comments first", ()=>{
+        return request(app)
+        .get('/api/articles/1/comments')
+        .expect(200)
+        .then((response) => {
+            const comments = response.body.comments;
+            expect(comments).toBeSorted({ created_at: 'id' })
+        })
+    })
 })
 
 
