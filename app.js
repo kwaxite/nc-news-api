@@ -3,7 +3,7 @@ const express = require('express')
 const app = express();
 const { getAllTopics, getApi} = require("./controllers/topics.controller");
 const { getArticlesById, getAllArticles } = require('./controllers/articles.controller');
-const { getCommentsByArticleID } = require('./controllers/comments.controller');
+const { getCommentsByArticleID, postComments } = require('./controllers/comments.controller');
 
 app.use(express.json());
 
@@ -15,6 +15,8 @@ app.get("/api", getApi )
 
 app.get("/api/articles/:article_id", getArticlesById)
 app.get("/api/articles", getAllArticles)
+
+app.post("/api/articles/:article_id/comments",postComments )
 
 app.get("/api/articles/:article_id/comments", getCommentsByArticleID)
 
@@ -28,8 +30,15 @@ app.use((err, req, res, next) => {
 
 // handle specific psql errors
 app.use((err, req, res, next)=>{
-    if (err.code === '22P02'){
+    if (err.code === '22P02' || err.code === '23502'){
     res.status(400).send({msg:'Bad request'})
+    }
+        next(err)
+    })
+
+app.use((err, req, res, next)=>{
+    if (err.code === '23503'){
+    res.status(404).send({msg:'Not Found'})
     }
         next(err)
     })

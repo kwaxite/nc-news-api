@@ -136,5 +136,76 @@ describe ("/api/articles/:article_id/comments", ()=>{
     })
 })
 
+describe("POST /api/articles/:article_id/comments", ()=>{
+    test('POST:201 inserts a new comment for an article to the db and returns the posted comment with correct properties and their values (votes default to 0)', () => {
+            const newComment = {
+            username: 'butter_bridge',
+            body: "I cannot imagine any joy comming out of this cold depressing world"
+            };
+            return request(app)
+            .post('/api/articles/1/comments')
+            .send(newComment)
+            .expect(201)
+            .then((response) => {
+                const comment = response.body.comment
+                expect(comment.article_id).toBe(1)
+                expect(comment.author).toBe("butter_bridge")
+                expect(comment.body).toBe("I cannot imagine any joy comming out of this cold depressing world")
+                expect(comment.votes).toBe(0)
+            });
+        });
+        test('POST:404 sends an appropriate status and error message when given a valid but non-existent id', () => {
+            const newComment = {
+                username: 'butter_bridge',
+                body: "I cannot imagine any joy comming out of this cold depressing world"
+                };
+                return request(app)
+                .post('/api/articles/9999/comments')
+                .send(newComment)
+                .expect(404)
+                .then((response) => {
+                expect(response.body.msg).toBe('Not Found');
+                });
+        });
+        test('POST:400 sends an appropriate status and error message when given an invalid id', () => {
+            const newComment = {
+                username: 'butter_bridge',
+                body: "I cannot imagine any joy comming out of this cold depressing world"
+                };
+                return request(app)
+                .post('/api/articles/invalidID/comments')
+                .send(newComment)
+                .expect(400)
+                .then((response) => {
+                expect(response.body.msg).toBe('Bad request');
+                });
+            });
+        test('POST:400 sends an appropriate status and error message for missing keys in post object', () => {
+            const newComment = {
+                username: 'butter_bridge',
+                };
+                return request(app)
+                .post('/api/articles/1/comments')
+                .send(newComment)
+                .expect(400)
+                .then((response) => {
+                expect(response.body.msg).toBe('Bad request');
+                });
+            });
+        test('POST:404 sends an appropriate status and error message for missing keys in post object', () => {
+            const newComment = {
+                username: 'star_wars',
+                body: "I cannot imagine any joy comming out of this cold depressing world"
+                };
+                return request(app)
+                .post('/api/articles/1/comments')
+                .send(newComment)
+                .expect(404)
+                .then((response) => {
+                expect(response.body.msg).toBe('Not Found');
+                });
+            });
+})
+
 
 
