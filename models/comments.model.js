@@ -19,6 +19,18 @@ function selectCommentsByArticleId(article_id){
                 })
 }
 
-module.exports = {selectCommentsByArticleId}
+function insertComment (comment, articleId) {
+        return db
+        .query(
+            `INSERT INTO comments 
+            (body, author, article_id, votes) 
+                    VALUES ($1, $2, $3, $4) RETURNING *;`,
+                    [comment.body, comment.username,articleId, comment.votes]
+        )
+        .then((result) => {
+            return result.rows[0];
+        })
+    };
 
-// /api/articles/:article_id/comments
+module.exports = {selectCommentsByArticleId, insertComment}
+
