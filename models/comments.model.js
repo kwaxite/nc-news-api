@@ -32,5 +32,24 @@ function insertComment (comment, articleId) {
         })
     };
 
-module.exports = {selectCommentsByArticleId, insertComment}
+function deleteCommentByCommentId(commentId){
+    return db.query(
+        `DELETE FROM comments
+        WHERE article_id = $1
+        RETURNING *`,
+        [commentId]
+    )
+    .then(({ rows }) => {
+        const comment = rows[0];
+        if (!comment) {
+            return Promise.reject({
+            status: 404,
+            msg: `No comment found for comment_id: ${commentId}`,
+            });
+        }
+        return comment;
+        })
+}
+
+module.exports = {selectCommentsByArticleId, insertComment,deleteCommentByCommentId}
 
