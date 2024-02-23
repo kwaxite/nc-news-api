@@ -41,7 +41,6 @@ function deleteCommentByCommentId(commentId){
     )
     .then(({ rows }) => {
         const comment = rows[0];
-        console.log("model 1", comment)
         if (!comment) {
             return Promise.reject({
             status: 404,
