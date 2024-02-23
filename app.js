@@ -3,7 +3,7 @@ const express = require('express')
 const app = express();
 const { getAllTopics, getApi} = require("./controllers/topics.controller");
 const { getArticlesById, getAllArticles, patchArticlesVotesById } = require('./controllers/articles.controller');
-const { getCommentsByArticleID, postComments } = require('./controllers/comments.controller');
+const { getCommentsByArticleID, postComments, deleteCommentByID } = require('./controllers/comments.controller');
 
 app.use(express.json());
 
@@ -20,6 +20,8 @@ app.post("/api/articles/:article_id/comments",postComments )
 app.patch("/api/articles/:article_id", patchArticlesVotesById)
 
 app.get("/api/articles/:article_id/comments", getCommentsByArticleID)
+
+app.delete("/api/comments/:comment_id", deleteCommentByID)
 
  // handle custom errors
 app.use((err, req, res, next) => {
