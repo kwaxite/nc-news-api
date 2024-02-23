@@ -13,6 +13,7 @@ function getArticlesById(req, res, next){
 }
 
 function getAllArticles(req, res, next){
+    console.log("first controller", req.query)
     return selectAllArticles()
     .then((articles) =>{
         res.status(200).send({articles})
@@ -33,4 +34,6 @@ function patchArticlesVotesById(req, res, next){
         next(err)
     });
 }
+
+
 module.exports = {getArticlesById, getAllArticles,patchArticlesVotesById}

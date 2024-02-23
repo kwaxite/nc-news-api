@@ -2,7 +2,7 @@ const request = require('supertest');
 const express = require('express')
 const app = express();
 const { getAllTopics, getApi} = require("./controllers/topics.controller");
-const { getArticlesById, getAllArticles, patchArticlesVotesById } = require('./controllers/articles.controller');
+const { getArticlesById, getAllArticles, patchArticlesVotesById, getArticlesByTopic } = require('./controllers/articles.controller');
 const { getCommentsByArticleID, postComments, deleteCommentByID } = require('./controllers/comments.controller');
 const { getUsers } = require('./controllers/users.controller');
 
@@ -13,6 +13,7 @@ app.use(express.json());
 app.get("/api/topics", getAllTopics)
 
 app.get("/api", getApi )
+
 
 app.get("/api/articles/:article_id", getArticlesById)
 app.get("/api/articles", getAllArticles)
@@ -25,6 +26,8 @@ app.get("/api/articles/:article_id/comments", getCommentsByArticleID)
 app.delete("/api/comments/:comment_id", deleteCommentByID)
 
 app.get("/api/users", getUsers)
+
+
 
  // handle custom errors
 app.use((err, req, res, next) => {
