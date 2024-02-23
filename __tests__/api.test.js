@@ -176,8 +176,7 @@ describe("POST /api/articles/:article_id/comments", ()=>{
                 .post('/api/articles/invalidID/comments')
                 .send(newComment)
                 .expect(400)
-                .then((response) => {
-                expect(response.body.msg).toBe('Bad request');
+                .then((response) => {expect(response.body.msg).toBe('Bad request');
                 });
             });
         test('POST:400 sends an appropriate status and error message for missing keys in post object', () => {
@@ -192,7 +191,7 @@ describe("POST /api/articles/:article_id/comments", ()=>{
                 expect(response.body.msg).toBe('Bad request');
                 });
             });
-        test('POST:404 sends an appropriate status and error message for missing keys in post object', () => {
+        test('POST:404 sends an appropriate status and error message for invalid username', () => {
             const newComment = {
                 username: 'star_wars',
                 body: "I cannot imagine any joy comming out of this cold depressing world"
@@ -205,6 +204,58 @@ describe("POST /api/articles/:article_id/comments", ()=>{
                 expect(response.body.msg).toBe('Not Found');
                 });
             });
+})
+
+describe("PATCH /api/articles/:article_id", ()=>{
+    test(`PATCH:200 finds an article by it's id and updates it by increasing the current article's vote property by 1`, () => {
+        const newVote = { inc_votes : 1 };
+        return request(app)
+        .patch('/api/articles/1')
+        .send(newVote)
+        .expect(200)
+        .then((response) => {
+            const article = response.body;
+            expect(article.article_id).toBe(1)
+            expect(article.votes).toBe(101)
+            expect(article.title).toBe('Living in the shadow of a great man')
+        });
+    });
+    test(`PATCH:200 finds an article by it's id and updates it by would decreasing the current article's vote property by 100`, () => {
+        const newVote = { inc_votes : -100 };
+        return request(app)
+        .patch('/api/articles/3')
+        .send(newVote)
+        .expect(200)
+        .then((response) => {
+            const article = response.body;
+            expect(article.article_id).toBe(3)
+            expect(article.votes).toBe(-100)
+            expect(article.title).toBe('Eight pug gifs that remind me of mitch')
+        });
+    });
+    test('PATCH:404 sends an appropriate status and error message when given a valid but non-existent id', () => {
+        const newVote = { inc_votes : 50 };
+        return request(app)
+        .patch('/api/articles/999999')
+        .send(newVote)
+        .expect(404)
+        .then((response) => {
+            const article = response.body;
+            expect(article.msg).toBe('No user found for user_id: 999999');
+        });
+    });
+    test('PATCH:400 sends an appropriate status and error message for missing keys in post object', () => {
+        const newVote = {  };
+        return request(app)
+        .patch('/api/articles/idnumbertwo')
+        .send(newVote)
+        .expect(400)
+        .then((response) => {
+            const article = response.body;
+            expect(article.msg).toBe('Bad request');
+        });
+    });
+
 })
 
 
