@@ -35,6 +35,24 @@ function selectAllArticles(){
     })
 }
 
+function updateArticlesVoteById(articleId, updateVote){
+    return db.query (
+        `UPDATE articles
+        SET votes = votes + $1
+        WHERE article_id = $2 RETURNING * ; `,
+        [updateVote.inc_votes, articleId]
+        )
+        .then(({ rows }) => {
+            const user = rows[0];
+            if (!user) {
+                return Promise.reject({
+                status: 404,
+                msg: `No user found for user_id: ${articleId}`,
+                });
+            }
+            return user;
+            })
+}
 
 
-module.exports = {selectArticlesById, selectAllArticles}
+module.exports = {selectArticlesById, selectAllArticles, updateArticlesVoteById}
