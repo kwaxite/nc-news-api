@@ -280,5 +280,23 @@ describe("DELETE /api/comments/:comment_id", ()=>{
         });
 })
 
+describe("GET /api/users", ()=>{
+    test(`returns an array of objects, each object should have the following properties: username,
+    name, avatar_url`,()=>{
+        return request(app)
+        .get("/api/users")
+        .expect(200)
+        .then((response) => {
+            const users = response.body.users;
+            expect(users.length).toBe(4);
+            expect(Array.isArray(users)).toBe(true);
+            users.forEach((user) => {
+                expect(typeof user.username).toBe('string');
+                expect(typeof user.name).toBe('string');
+                expect(typeof user.avatar_url).toBe('string');
+            });
+        })
+    })
 
+})
 
