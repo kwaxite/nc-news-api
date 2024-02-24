@@ -50,7 +50,7 @@ app.use((err, req, res, next)=>{
     })
 
 app.use((err, req, res, next)=>{
-    console.log('error in error handling middleware', err)
+    // console.log('error in error handling middleware', err)
     res.status(500).send({msg: "Internal server error!"})
 })
 

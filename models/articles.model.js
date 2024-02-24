@@ -17,7 +17,6 @@ function selectArticlesById(article_id){
 
 
 function selectAllArticles(category){
-    console.log("model 1",category)
     let sqlString = `SELECT  articles.author, 
     articles.title, 
     articles.topic, 
@@ -50,10 +49,16 @@ function selectAllArticles(category){
     queryVals.push(category)
     }
     return db.query(sqlString, queryVals)
-    .then(response => {
-        console.log(response.rows)
-        return response.rows
+    .then(({rows}) => {
+        if (rows.length === 0){
+            return Promise.reject({
+                status: 404,
+                msg: `${category} is not a valid category name`,
+                });
+        }
+        return rows
     })
+
 }
 
 function updateArticlesVoteById(articleId, updateVote){
