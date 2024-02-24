@@ -307,17 +307,27 @@ describe("GET /api/articles (topic query)", ()=>{
         .expect(200)
         .then((response)=>{
             const articles = response.body.articles;
-            console.log("from test", articles)
             expect(articles.length).toBe(12);
             expect(Array.isArray(articles)).toBe(true);
             articles.forEach((article) => {
-                expect(typeof article.title).toBe('string');
-                expect(typeof article.topic).toBe('string');
                 expect(typeof article.author).toBe('string');
-                // expect(typeof article.body).toBe('string');
+                expect(typeof article.title).toBe('string');
+                expect(typeof article.article_id).toBe('number');
+                expect(typeof article.topic).toBe('string');
                 expect(typeof article.created_at).toBe('string');
+                expect(typeof article.votes).toBe('number');
                 expect(typeof article.article_img_url).toBe('string');
+                expect(typeof article.comment_count).toBe('number');
             })
+        })
+    })
+    test("should return an error when given an invalid category id",()=>{
+        return request(app)
+        .get("/api/articles?topic=forklift")
+        .expect(404)
+        .then((response) =>{
+            const error = response.body
+            expect(error.msg).toBe("forklift is not a valid category name")
         })
     })
 })

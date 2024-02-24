@@ -13,17 +13,14 @@ function getArticlesById(req, res, next){
 }
 
 function getAllArticles(req, res, next){
-    console.log("from console",req.query)
     const {topic} = req.query
-    console.log("from console 2",topic)
     return selectAllArticles(topic)
     .then((articles) =>{
-        console.log("from model 3",articles)
         res.status(200).send({articles})
     })
-    .catch((err) =>{
-        res.status(500).send({msg:"Error whilst fetching articles data"})
-    })
+    .catch((err)=>{
+        next(err)
+    });
 }
 
 function patchArticlesVotesById(req, res, next){
