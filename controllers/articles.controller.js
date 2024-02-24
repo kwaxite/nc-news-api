@@ -13,8 +13,12 @@ function getArticlesById(req, res, next){
 }
 
 function getAllArticles(req, res, next){
-    return selectAllArticles()
+    console.log("from console",req.query)
+    const {topic} = req.query
+    console.log("from console 2",topic)
+    return selectAllArticles(topic)
     .then((articles) =>{
+        console.log("from model 3",articles)
         res.status(200).send({articles})
     })
     .catch((err) =>{

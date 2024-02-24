@@ -298,6 +298,29 @@ describe("GET /api/users", ()=>{
             });
         })
     })
-
 })
+
+describe("GET /api/articles (topic query)", ()=>{
+    test("endpoint accept the query topic, which filters the articles by the topic value specified in the query. If the query is omitted, the endpoint should respond with all articles.", ()=>{
+        return request(app)
+        .get("/api/articles?topic=mitch")
+        .expect(200)
+        .then((response)=>{
+            const articles = response.body.articles;
+            console.log("from test", articles)
+            expect(articles.length).toBe(12);
+            expect(Array.isArray(articles)).toBe(true);
+            articles.forEach((article) => {
+                expect(typeof article.title).toBe('string');
+                expect(typeof article.topic).toBe('string');
+                expect(typeof article.author).toBe('string');
+                // expect(typeof article.body).toBe('string');
+                expect(typeof article.created_at).toBe('string');
+                expect(typeof article.article_img_url).toBe('string');
+            })
+        })
+    })
+})
+
+
 
