@@ -332,5 +332,20 @@ describe("GET /api/articles (topic query)", ()=>{
     })
 })
 
+// describe("GET /api/articles/:article_id (comment_count)", ()=>{
+//     test('endpoint accepts the query comment_count, and article id and returns which is the total count of all the comments with this article_id.', () => {
+//         return request(app)
+//         .get('/api/articles/1/comment?author=icellusedkars')
+//         .expect(200)
+//         .then((response) => {
+//             const articles = response.body.article
+//             expect(articles.article_id).toBe(1);
+//             expect(articles.author).toBe('icellusedkars');
+//             expect(articles.comment_count).toBe(11);
+//         });
+//     });
+// })
+
+
 
 
