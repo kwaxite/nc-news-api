@@ -48,6 +48,7 @@ describe('Articles', ()=>{
             .get('/api/articles/1')
             .expect(200)
             .then((response) => {
+                console.log("articles",response.body.article)
                 expect(response.body.article.article_id).toBe(1);
                 expect(response.body.article.title).toBe('Living in the shadow of a great man');
                 expect(response.body.article.topic).toBe('mitch');
@@ -82,6 +83,7 @@ describe('Articles', ()=>{
             .expect(200)
             .then((response) => {
                 const articles = response.body.articles;
+                console.log("all articles", articles)
                 articles.forEach((article) => {
                     expect(typeof article.author).toBe('string');
                     expect(typeof article.title).toBe('string');
@@ -113,7 +115,9 @@ describe ("/api/articles/:article_id/comments", ()=>{
             .get('/api/articles/1/comments')
             .expect(200)
             .then((response) => {
+                console.log(response.body.comments)
             expect(response.body.comments.length).toBe(11);
+            
             response.body.comments.forEach((comment) => {
                 expect(typeof comment.comment_id).toBe('number');
                 expect(typeof comment.votes).toBe('number');
@@ -332,19 +336,20 @@ describe("GET /api/articles (topic query)", ()=>{
     })
 })
 
-// describe("GET /api/articles/:article_id (comment_count)", ()=>{
-//     test('endpoint accepts the query comment_count, and article id and returns which is the total count of all the comments with this article_id.', () => {
-//         return request(app)
-//         .get('/api/articles/1/comment?author=icellusedkars')
-//         .expect(200)
-//         .then((response) => {
-//             const articles = response.body.article
-//             expect(articles.article_id).toBe(1);
-//             expect(articles.author).toBe('icellusedkars');
-//             expect(articles.comment_count).toBe(11);
-//         });
-//     });
-// })
+describe("GET /api/articles/:article_id (comment_count)", ()=>{
+    test('endpoint accepts the query comment_count, and article id and returns which is the total count of all the comments with this article_id.', () => {
+        return request(app)
+        .get('/api/articles/1?comment_count=comment_count')
+        .expect(200)
+        .then((response) => {
+            console.log("from test", response.body.article)
+            const articles = response.body.article
+            expect(articles.article_id).toBe(1);
+            expect(articles.author).toBe('butter_bridge');
+            expect(articles.comment_count).toBe(11);
+        });
+    });
+})
 
 
 

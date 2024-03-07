@@ -2,8 +2,12 @@ const { selectArticlesById, selectAllArticles, updateArticlesVoteById } = requir
 
 
 function getArticlesById(req, res, next){
+    console.log("from controller 1",req.query)
+    const {comment_count} = req.query
+    console.log("from controller 2",comment_count)
+    console.log("from controller 3",req.params)
     const {article_id} = req.params;
-    selectArticlesById(article_id) 
+    selectArticlesById(article_id,comment_count) 
     .then((article) =>{
         res.status(200).send({article})
     })

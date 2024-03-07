@@ -1,8 +1,22 @@
 const db = require('../db/connection')
 
-function selectArticlesById(article_id){
-    return db.query
-    ('SELECT * FROM articles WHERE article_id = $1;',[article_id])
+function selectArticlesById(article_id, comment_count){
+    console.log("from model 1", comment_count)
+    console.log("from model 2", article_id)
+    const queryVals = [article_id]
+    let sqlString = 'SELECT * FROM articles WHERE articles.article_id = $1;'
+    if (comment_count){
+        sqlString = `SELECT articles.article_id, articles.author, COUNT(comments.comment_id) :: INT AS comment_count 
+        FROM articles 
+        LEFT JOIN comments ON comments.article_id = articles.article_id
+        WHERE articles.article_id = $1
+        GROUP BY articles.article_id;`
+        
+    }
+    return db.query(sqlString,queryVals)
+
+   
+    // ('SELECT * FROM articles WHERE article_id = $1;',[article_id])
     .then(({ rows }) => {
         const user = rows[0];
         if (!user) {
