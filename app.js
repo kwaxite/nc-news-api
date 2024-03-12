@@ -1,3 +1,4 @@
+const cors = require('cors')
 const request = require('supertest');
 const express = require('express')
 const app = express();
@@ -5,7 +6,6 @@ const { getAllTopics, getApi} = require("./controllers/topics.controller");
 const { getArticlesById, getAllArticles, patchArticlesVotesById } = require('./controllers/articles.controller');
 const { getCommentsByArticleID, postComments, deleteCommentByID } = require('./controllers/comments.controller');
 const { getUsers } = require('./controllers/users.controller');
-const cors = require('cors')
 
 app.use(cors());
 
