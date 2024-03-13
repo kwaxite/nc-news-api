@@ -1,4 +1,4 @@
-const { selectCommentsByArticleId, insertComment, deleteCommentByCommentId } = require("../models/comments.model");
+const { selectCommentsByArticleId, insertComment, deleteCommentByCommentId, updateDBVotes } = require("../models/comments.model");
 
 
 
@@ -29,6 +29,18 @@ function postComments(req, res, next){
     })
     }
 
+function updateVotes(req, res, next){
+    const {comment_id} = req.params;
+    const {inc_votes} = req.body
+    return updateDBVotes(inc_votes, comment_id)
+    .then((result) => {
+        res.status(200).send({ result })
+    })
+    .catch((err)=>{
+        next(err)
+    })
+}
+
 function deleteCommentByID(req, res, next){
     const {comment_id} = req.params;
     return deleteCommentByCommentId(comment_id)
@@ -43,4 +55,4 @@ function deleteCommentByID(req, res, next){
 
 
 
-module.exports = {getCommentsByArticleID, postComments, deleteCommentByID}
+module.exports = {getCommentsByArticleID, postComments, deleteCommentByID, updateVotes}

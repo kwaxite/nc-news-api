@@ -1,8 +1,6 @@
 const db = require('../db/connection')
 
 function selectArticlesById(article_id, comment_count){
-    console.log("from model 1", comment_count)
-    console.log("from model 2", article_id)
     const queryVals = [article_id]
     let sqlString = 'SELECT * FROM articles WHERE articles.article_id = $1;'
     if (comment_count){
