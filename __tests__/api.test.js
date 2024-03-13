@@ -355,7 +355,6 @@ describe("PATCH /api/comments/:comment_id", ()=>{
         .send(newVote)
         .expect(200)
         .then((response) => {
-            console.log("from test - ",response.body)
             const comment = response.body.result
             expect(comment.comment_id).toBe(1)
             expect(comment.article_id).toBe(9)
@@ -371,7 +370,6 @@ describe("PATCH /api/comments/:comment_id", ()=>{
         .send(newVote)
         .expect(200)
         .then((response) => {
-            console.log("from test - ",response.body)
             const comment = response.body.result
             expect(comment.comment_id).toBe(1)
             expect(comment.article_id).toBe(9)
@@ -387,8 +385,18 @@ describe("PATCH /api/comments/:comment_id", ()=>{
         .send(newVote)
         .expect(400)
         .then((response) => {
-                const article = response.body;
-                expect(article.msg).toBe('Bad request');
+                expect(response.body.msg).toBe('Bad request');
+        });
+    });
+    test('PATCH:404 sends an appropriate status and error message when given a valid but non-existent id', () => {
+        const newVote = { inc_votes : 1 };
+        return request(app)
+        .patch('/api/comments/999999')
+        .send(newVote)
+        .expect(404)
+        .then((response) => {
+            console.log( response.body)
+            expect(response.body.msg).toBe('No comment found for comment_id: 999999');
         });
     });
 })
