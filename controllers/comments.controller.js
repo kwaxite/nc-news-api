@@ -34,7 +34,6 @@ function updateVotes(req, res, next){
     const {inc_votes} = req.body
     return updateDBVotes(inc_votes, comment_id)
     .then((result) => {
-        console.log("controller", result)
         res.status(200).send({ result })
     })
     .catch((err)=>{

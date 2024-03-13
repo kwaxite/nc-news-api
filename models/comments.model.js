@@ -43,7 +43,6 @@ function deleteCommentByCommentId(commentId) {
         )
         .then(({ rows }) => {
             const comment = rows[0];
-            console.log("from error rows 1",comment)
             if (!comment) {
                 return Promise.reject({
                     status: 404,
@@ -55,25 +54,23 @@ function deleteCommentByCommentId(commentId) {
 }
 
 function updateDBVotes(inc_votes, comment_id) {
-    console.log("model 1", comment_id)
     return db.query(
         `UPDATE comments 
         SET votes = votes + $1
         WHERE comment_id = $2
-        RETURNING *;`,[inc_votes,comment_id]
-    )        
-    .then(({ rows }) => {
-        
-        const comment = rows[0];
-        console.log("from error rows 2",comment)
-        if (!comment) {
-            return Promise.reject({
-                status: 404,
-                msg: `No comment found for comment_id: ${comment_id}`,
-            });
-        }
-        return comment;
-    });
+        RETURNING *;`, [inc_votes, comment_id]
+    )
+        .then(({ rows }) => {
+
+            const comment = rows[0];
+            if (!comment) {
+                return Promise.reject({
+                    status: 404,
+                    msg: `No comment found for comment_id: ${comment_id}`,
+                });
+            }
+            return comment;
+        });
 }
 module.exports = {
     selectCommentsByArticleId,

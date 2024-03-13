@@ -1,34 +1,34 @@
 const db = require('../db/connection')
 
-function selectArticlesById(article_id, comment_count){
+function selectArticlesById(article_id, comment_count) {
     const queryVals = [article_id]
     let sqlString = 'SELECT * FROM articles WHERE articles.article_id = $1;'
-    if (comment_count){
+    if (comment_count) {
         sqlString = `SELECT articles.article_id, articles.author, COUNT(comments.comment_id) :: INT AS comment_count 
         FROM articles 
         LEFT JOIN comments ON comments.article_id = articles.article_id
         WHERE articles.article_id = $1
         GROUP BY articles.article_id;`
-        
-    }
-    return db.query(sqlString,queryVals)
 
-   
-    // ('SELECT * FROM articles WHERE article_id = $1;',[article_id])
-    .then(({ rows }) => {
-        const user = rows[0];
-        if (!user) {
-            return Promise.reject({
-            status: 404,
-            msg: `No user found for user_id: ${article_id}`,
-            });
-        }
-        return user;
+    }
+    return db.query(sqlString, queryVals)
+
+
+        // ('SELECT * FROM articles WHERE article_id = $1;',[article_id])
+        .then(({ rows }) => {
+            const user = rows[0];
+            if (!user) {
+                return Promise.reject({
+                    status: 404,
+                    msg: `No user found for user_id: ${article_id}`,
+                });
+            }
+            return user;
         })
 }
 
 
-function selectAllArticles(category){
+function selectAllArticles(category) {
     let sqlString = `SELECT  articles.author, 
     articles.title, 
     articles.topic, 
@@ -58,39 +58,39 @@ function selectAllArticles(category){
         GROUP BY articles.article_id
         ORDER BY created_at DESC
     ;`
-    queryVals.push(category)
+        queryVals.push(category)
     }
     return db.query(sqlString, queryVals)
-    .then(({rows}) => {
-        if (rows.length === 0){
-            return Promise.reject({
-                status: 404,
-                msg: `${category} is not a valid category name`,
+        .then(({ rows }) => {
+            if (rows.length === 0) {
+                return Promise.reject({
+                    status: 404,
+                    msg: `${category} is not a valid category name`,
                 });
-        }
-        return rows
-    })
+            }
+            return rows
+        })
 
 }
 
-function updateArticlesVoteById(articleId, updateVote){
-    return db.query (
+function updateArticlesVoteById(articleId, updateVote) {
+    return db.query(
         `UPDATE articles
         SET votes = votes + $1
         WHERE article_id = $2 RETURNING * ; `,
         [updateVote.inc_votes, articleId]
-        )
+    )
         .then(({ rows }) => {
             const user = rows[0];
             if (!user) {
                 return Promise.reject({
-                status: 404,
-                msg: `No user found for user_id: ${articleId}`,
+                    status: 404,
+                    msg: `No user found for user_id: ${articleId}`,
                 });
             }
             return user;
-            })
+        })
 }
 
 
-module.exports = {selectArticlesById, selectAllArticles, updateArticlesVoteById}
+module.exports = { selectArticlesById, selectAllArticles, updateArticlesVoteById }
