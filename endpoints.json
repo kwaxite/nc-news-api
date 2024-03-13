@@ -6,12 +6,22 @@
     "description": "serves an array of all topics",
     "queries": [],
     "exampleResponse": {
-      "topics": [{ "slug": "football", "description": "Footie!" }]
+      "topics": [
+        {
+          "slug": "football",
+          "description": "Footie!"
+        }
+      ]
     }
   },
   "GET /api/articles": {
     "description": "serves an array of all articles",
-    "queries": ["author", "topic", "sort_by", "order"],
+    "queries": [
+      "author",
+      "topic",
+      "sort_by",
+      "order"
+    ],
     "exampleResponse": {
       "articles": [
         {
@@ -60,18 +70,74 @@
       ]
     }
   },
+  "POST /api/articles/:article_id/comments": {
+    "description": "inserts a new comment for an article to the db and returns the posted comment with correct properties and their values (votes default to 0)",
+    "queries": [],
+    "exampleResponse": {
+      "comments": [
+        {
+          "comment_id": 145,
+          "body": "Odit aut error. Occaecati et qui. Quam nam aut dolorem.",
+          "article_id": 3,
+          "author": "jessjelly",
+          "votes": 10,
+          "created_at": "2020-10-03T14:18:00.000Z"
+        }
+      ]
+    }
+  },
   "PATCH /api/comments/:comment_id": {
     "description": "Is available on /api/comments/:comment_id. Endpoint accepts an object in the form { inc_votes: 1 } or { inc_votes: -1 } and update the votes on a comment given the comment's comment_id",
     "queries": [],
-    "exampleResponse": {      
-    "result": {
-      "comment_id": 1,
-      "body": "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
-      "article_id": 9,
-      "author": "butter_bridge",
-      "votes": 15,
-      "created_at": "2020-04-06T12:17:00.000Z"
+    "exampleResponse": {
+      "result": {
+        "comment_id": 1,
+        "body": "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+        "article_id": 9,
+        "author": "butter_bridge",
+        "votes": 15,
+        "created_at": "2020-04-06T12:17:00.000Z"
+      }
     }
-  }
+  },
+  "GET /api/articles/:article_id (comment_count)": {
+    "description": "endpoint accepts the query comment_count, and article id and returns which is the total count of all the comments with this article_id.",
+    "queries": [
+      "comment_count"
+    ],
+    "exampleResponse": {
+      "articles": [
+        {
+          "author": "icellusedkars",
+          "title": "Eight pug gifs that remind me of mitch",
+          "topic": "mitch",
+          "article_id": 3,
+          "created_at": "2020-11-03T09:12:00.000Z",
+          "votes": 0,
+          "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+          "comment_count": 2
+        }
+      ]
+    }
+  },
+  "GET /api/articles (topic query)": {
+    "description": "endpoint accept the query topic, which filters the articles by the topic value specified in the query. If the query is omitted, the endpoint should respond with all articles.",
+    "queries": [
+      "coding",
+      "football",
+      "cooking"
+    ],
+    "articles": [
+      {
+        "author": "tickle122",
+        "title": "The battle for Node.js security has only begun",
+        "topic": "coding",
+        "article_id": 12,
+        "created_at": "2020-11-15T13:25:00.000Z",
+        "votes": 0,
+        "article_img_url": "https://images.pexels.com/photos/10845119/pexels-photo-10845119.jpeg?w=700&h=700",
+        "comment_count": 7
+      }
+    ]
   }
 }

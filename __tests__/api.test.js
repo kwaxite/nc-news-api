@@ -308,6 +308,7 @@ describe("GET /api/articles (topic query)", () => {
             .get("/api/articles?topic=mitch")
             .expect(200)
             .then((response) => {
+                console.log(response.body)
                 const articles = response.body.articles;
                 expect(articles.length).toBe(12);
                 expect(Array.isArray(articles)).toBe(true);
